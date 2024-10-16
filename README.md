@@ -10,6 +10,8 @@
 
 <img width="767" alt="Snipaste_2024-10-16_14-45-08" src="https://github.com/user-attachments/assets/affbbc41-c86a-42d5-90d0-ffc4fe1d61db">
 
+对向日葵sunflower使用"power":
+
 <img width="767" alt="Snipaste_2024-10-16_14-45-29" src="https://github.com/user-attachments/assets/a0676d7a-a6f9-4ee7-aa7b-4ae17cc50a03">
 
 <img width="769" alt="Snipaste_2024-10-16_14-45-45" src="https://github.com/user-attachments/assets/8356374e-0fe4-4bdb-8a5c-fac9a0f125a3">
