@@ -9,11 +9,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
     bk_played=false;
     srand(uint(QTime(0,0,0).secsTo(QTime::currentTime())));
     sound_wabiwabu=new QSoundEffect;
-    sound_wabiwabu->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\wabiwabu.wav"));
+    sound_wabiwabu->setSource(QUrl::fromLocalFile(":/resources/wabiwabu.wav"));
     sound_wabiwabu->setVolume(0.4f);
     sound_wabiwabu->play();
     sound_bk=new QSoundEffect;
-    sound_bk->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\crazyDave.wav"));
+    sound_bk->setSource(QUrl::fromLocalFile(":/resources/crazyDave.wav"));
     sound_bk->setLoopCount(QSoundEffect::Infinite);
     sound_bk->setVolume(0.6f);
     //ui->setupUi(this);
@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     bk=new QGraphicsPixmapItem;
     bk->setZValue(0);
-    bk->setPixmap(QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\Background.jpg"));
+    bk->setPixmap(QPixmap(":/resources/Background.jpg"));
     scene->addItem(bk);
     Plants* ps=new Sunflower;
     Zombie* zb=new Conezombie;
@@ -88,20 +88,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::addZombies()
 {
-    int time=100;
-    static int counter=0;
+    static int low = 4;
+    static int high = 8;
+    static int maxtime = 20 * 1000 / 33;
+    static int time = maxtime / 2;
+    static int counter = 0;
     if(++counter>time)
     {
+        if (++low > high)
+        {
+            maxtime /= 1.3;
+            high *= 2;
+        }
         counter=0;
         int type=rand()%100;
         Zombie* zombie=nullptr;
-        if(type<40)
+        if(type<70)
             zombie=new normalzombie;
-        else if(type<60)
-            zombie=new screenzombie;
         else if(type<75)
+            zombie=new screenzombie;
+        else if(type<85)
             zombie=new Conezombie;
-        else if(type<90)
+        else if(type<94)
             zombie=new Bucketzombie;
         else if(type<100)
             zombie=new Footballzombie;
@@ -114,11 +122,19 @@ void MainWindow::addZombies()
 
 void MainWindow::addPlants()
 {
-    int time=200;
+    static int count=0;
+    static int k=0;
+    static int maxt=6;
+    if(count%maxt==0) {
+        k++;
+        maxt--;
+    }
+    int time=800-k*50;
     static int counter=0;
     if(++counter>time)
     {
         counter=0;
+        count++;
         int type=rand()%100;
         Plants* plant=nullptr;
         if(type<20)
