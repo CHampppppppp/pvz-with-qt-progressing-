@@ -3,10 +3,10 @@
 
 Wallnut::Wallnut()
 {
-    hp=350;
+    hp=450;
     atk=0;
     state=1;
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\wallnut1.gif");
+    setMovie(":/resources/wallnut1.gif");
 }
 
 void Wallnut::advance(int phase)
@@ -15,15 +15,16 @@ void Wallnut::advance(int phase)
     update();
     if(Button::shovel_activate||Button::power_activate) setCursor(Qt::PointingHandCursor);
     else setCursor(Qt::ArrowCursor);
+    if(!state&&hp<=700) hp+=0.8;
     if(hp<=250&&state==1)
     {
         state=2;
-        setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\wallnut2.gif");
+        setMovie(":/resources/wallnut2.gif");
     }
     else if(hp<=100&&state==2)
     {
         state=3;
-        setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\wallnut3.gif");
+        setMovie(":/resources/wallnut3.gif");
     }else if(hp<=0&&state==3)
     {
         delete this;
@@ -33,24 +34,26 @@ void Wallnut::advance(int phase)
 
 void Wallnut::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            time=1;
+            counter=0;
+            button->counter=0;
+            button->state=0;
+            state=0;
+        }
     }
 }
