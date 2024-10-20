@@ -4,7 +4,7 @@
 Footballzombie::Footballzombie()
 {
     hp=350;
-    atk=0.7;
+    atk=0.8;
     state=WALK;
     speed=1;
     slow=NO_SLOW;
@@ -18,7 +18,7 @@ Footballzombie::Footballzombie()
     //qDebug() << "File does not exist!";
     // 可以设置一个备用动画或处理文件不存在的情况
     //}
-    SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\fbzbw.gif");
+    SetMovie(":/resources/fbzbw.gif");
 }
 
 void Footballzombie::advance(int phase)
@@ -27,20 +27,33 @@ void Footballzombie::advance(int phase)
     update();
     if(Button::power_activate) setCursor(Qt::PointingHandCursor);
     else setCursor(Qt::ArrowCursor);
+
     if(hp<=0)
     {
         if(state==ATTACK||state==WALK)
         {
             state=DEAD;
-            Sethead("C:\\Users\\champ\\Documents\\pvzfresh\\zh.gif");
-            SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\fbzbd.gif");
+            Sethead(":/resources/zh.gif");
+            SetMovie(":/resources/fbzbd.gif");
             movie->setSpeed(50);
+        }
+        else if(state==BURN)
+        {
+            state=DEAD;
+            speed=0;
+            SetMovie(":/resources/burn.gif");
         }
         if(state==DEAD&&movie->frameCount()==movie->currentFrameNumber()+1)
         {
             delete this;//播放完gif顺带连head一起删除
         }
         return;
+    }
+    if(super)
+    {
+        movie->setSpeed(250);
+        speed=2.5;
+        atk=1.2;
     }
     QList<QGraphicsItem*> items=collidingItems();
     if(!items.isEmpty())//有碰撞
@@ -51,7 +64,7 @@ void Footballzombie::advance(int phase)
             plant->hp-=atk;
             if(state!=ATTACK)
             {
-                SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\fbzba.gif");
+                SetMovie(":/resources/fbzba.gif");
                 state=ATTACK;
             }
             return;
@@ -61,7 +74,7 @@ void Footballzombie::advance(int phase)
     if(state==ATTACK)//吃完后继续walk
     {
         state=WALK;
-        SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\fbzbw.gif");
+        SetMovie(":/resources/fbzbw.gif");
     }
 
     if(slow)
@@ -69,21 +82,20 @@ void Footballzombie::advance(int phase)
         if(++counter>time)
         {
             snowfree();
-            return;
         }
-        speed=0.5;
-        movie->setSpeed(60);
+        if(slow==1)
+        {
+            movie->setSpeed(70);
+            speed=0.7;
+        }
+        else if(slow==2)
+        {
+            movie->setSpeed(30);
+            speed=0.3;
+        }
     }
 
-    if(state==BURN)
-    {
-        speed=0;
-        if(movie->currentFrameNumber()==movie->frameCount()-1)
-        {
-            delete this;
-            return;
-        }
-    }
+
     if(x()<100) {
         delete this;
         return;
@@ -103,7 +115,7 @@ void Footballzombie::snowfree()
 
 void Footballzombie::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(930,60);
+    QPointF pos(918,60);
     QGraphicsItem* item=scene()->itemAt(pos,QTransform());
     Button* button=qgraphicsitem_cast<Button*>(item);
     if(button)
@@ -113,9 +125,9 @@ void Footballzombie::mousePressEvent(QGraphicsSceneMouseEvent *event)
             setCursor(Qt::PointingHandCursor);
             button->power_activate=false;
             button->counter=0;
+            button->state=0;
             snowfree();
-            speed=3.0;
-            movie->setSpeed(300);
+            super=true;
             qDebug()<<"powerfootballzombie";
         }
     }
