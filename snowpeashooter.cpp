@@ -7,13 +7,14 @@ snowpeashooter::snowpeashooter()
     state=1;
     time=100;
     counter=0;
-    atk=12;
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\snowpea.gif");
+    atk=17;
+    setMovie(":/resources/snowpea.gif");
     movie->setSpeed(50);
 }
 
 void snowpeashooter::advance(int phase)
 {
+    static int num=0;
     if(Button::shovel_activate||Button::power_activate) setCursor(Qt::PointingHandCursor);
     else setCursor(Qt::ArrowCursor);
     if(!phase) return;
@@ -26,7 +27,19 @@ void snowpeashooter::advance(int phase)
         QList<QGraphicsItem*> items=collidingItems();
         if(!items.isEmpty())
         {
-            Pea* pea=new Pea(atk,SNOW);
+            int s;
+            if(state)
+                s=SNOW;
+            else {
+                s=2*SNOW;
+                num++;
+                if(num>3){
+                    num=0;
+                    state=1;
+                }
+            }
+            Pea* pea=new Pea(atk,s);
+            qDebug()<<"pea_snow:"<<s;
             pea->setX(x()+32);
             pea->setY(y());
             scene()->addItem(pea);
@@ -45,25 +58,26 @@ bool snowpeashooter::collidesWithItem(const QGraphicsItem* other,Qt::ItemSelecti
 
 void snowpeashooter::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            qDebug()<<"power_snowpea";
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->counter=0;
+            button->state=0;
+            state=0;
+        }
     }
 }
 
