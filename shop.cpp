@@ -4,7 +4,7 @@ Shop::Shop()
 {
     sun_val=100;
     counter=0;
-    sun_generate_time=100;
+    sun_generate_time=700;
     pre_sunval=sun_val;
 }
 
@@ -18,7 +18,7 @@ void Shop::paint(QPainter*painter,const QStyleOptionGraphicsItem* option,QWidget
     Q_UNUSED(option)
     Q_UNUSED(widget)
     //painter->drawRect(boundingRect());
-    painter->drawPixmap(QRect(0,0,528,95),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\shop.png"));
+    painter->drawPixmap(QRect(0,0,528,95),QPixmap(":/resources/shop.png"));
     QFont font;
     font.setPointSizeF(15);
     painter->setFont(font);
@@ -42,7 +42,7 @@ void Shop::advance(int phase)
     if(sun_val!=pre_sunval)
     {
         pre_sunval=sun_val;
-        qDebug()<<"sun_val_changed:"<<sun_val;
+        //qDebug()<<"sun_val_changed:"<<sun_val;
     }
 }
 
