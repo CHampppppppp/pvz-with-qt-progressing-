@@ -7,8 +7,8 @@ Repeater::Repeater()
     state=1;
     time=100;
     counter=0;
-    atk=15;
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\rp.gif");
+    atk=20;
+    setMovie(":/resources/rp.gif");
     movie->setSpeed(50);
 }
 
@@ -19,8 +19,34 @@ void Repeater::advance(int phase)
     if(!phase) return;
     update();
     if(hp<=0)
+    {
         delete this;
-    else if(state==1&&++counter>=time)
+        return;
+    }
+    if(state==0)
+    {
+        if(++counter>=time)
+        {
+            if(counter>=75)
+            {
+                counter=0;
+                time=100;
+                state=1;
+                return;
+            }
+            time=counter+5;
+            QList<QGraphicsItem*> items=collidingItems();
+            if(!items.isEmpty())
+            {
+                Pea* pea1=new Pea(atk,NO_SNOW);
+                pea1->setX(x()+32);
+                pea1->setY(y());
+                scene()->addItem(pea1);
+                return;
+            }
+        }
+    }
+    if(state==1&&++counter>=time)
     {
         counter=0;
         QList<QGraphicsItem*> items=collidingItems();
@@ -29,7 +55,6 @@ void Repeater::advance(int phase)
             Pea* pea1=new Pea(atk,NO_SNOW);
             pea1->setX(x()+32);
             pea1->setY(y());
-
             scene()->addItem(pea1);
             state=2;
             return;
@@ -55,24 +80,25 @@ bool Repeater::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionMod
 
 void Repeater::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->counter=0;
+            button->state=0;
+            state=0;
+            time=5;
+        }
     }
 }
