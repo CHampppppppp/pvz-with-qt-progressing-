@@ -1,15 +1,16 @@
 #include "potatomine.h"
 #include "button.h"
+#include "card.h"
 
 Potatomine::Potatomine()
 {
     hp=80;
     atk=300;
     state=1;//地里 state2->地上 state3->爆炸
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\pttm1.gif");
+    setMovie(":/resources/pttm1.gif");
     movie->setSpeed(50);
     counter=0;
-    time=200;
+    time=350;
 }
 
 void Potatomine::advance(int phase)
@@ -27,7 +28,7 @@ void Potatomine::advance(int phase)
     {
         counter=0;
         state=2;
-        setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\pttm2.gif");
+        setMovie(":/resources/pttm2.gif");
     }
     if(state==2)
     {  
@@ -48,7 +49,7 @@ void Potatomine::advance(int phase)
             if(iszombie)
             {
                 state=3;
-                setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\pttm3.gif");
+                setMovie(":/resources/pttm3.gif");
             }
         }
     }
@@ -64,24 +65,32 @@ bool Potatomine::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionM
 
 void Potatomine::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            QGraphicsItem* item2=scene()->itemAt(QPoint(533,45),transform());
+            Card* card=qgraphicsitem_cast<Card*>(item2);
+            card->counter=Card::cool[card->name];
+            button->counter=0;
+            button->state=0;
+            counter=time;
+        }
     }
+}
+
+QRectF Potatomine::boundingRect() const
+{
+    return state==3 ? QRectF(-60, -70, 120, 140) : Plants::boundingRect();
 }
