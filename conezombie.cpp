@@ -18,7 +18,7 @@ Conezombie::Conezombie()
     //qDebug() << "File does not exist!";
     // 可以设置一个备用动画或处理文件不存在的情况
     //}
-    SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\czbw.gif");
+    SetMovie(":/resources/czbw.gif");
 }
 
 void Conezombie::advance(int phase)
@@ -32,15 +32,27 @@ void Conezombie::advance(int phase)
         if(state==ATTACK||state==WALK)
         {
             state=DEAD;
-            Sethead("C:\\Users\\champ\\Documents\\pvzfresh\\zh.gif");
-            SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\zd.gif");
+            Sethead(":/resources/zh.gif");
+            SetMovie(":/resources/zd.gif");
             movie->setSpeed(50);
+        }
+        else if(state==BURN)
+        {
+            state=DEAD;
+            speed=0;
+            SetMovie(":/resources/burn.gif");
         }
         if(state==DEAD&&movie->frameCount()==movie->currentFrameNumber()+1)
         {
             delete this;//播放完gif顺带连head一起删除
         }
         return;
+    }
+    if(super)
+    {
+        movie->setSpeed(250);
+        speed=2.5;
+        atk=0.8;
     }
     QList<QGraphicsItem*> items=collidingItems();
     if(!items.isEmpty())//有碰撞
@@ -51,7 +63,7 @@ void Conezombie::advance(int phase)
             plant->hp-=atk;
             if(state!=ATTACK)
             {
-                SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\czba.gif");
+                SetMovie(":/resources/czba.gif");
                 state=ATTACK;
             }
             return;
@@ -61,7 +73,7 @@ void Conezombie::advance(int phase)
     if(state==ATTACK)//吃完后继续walk
     {
         state=WALK;
-        SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\czbw.gif");
+        SetMovie(":/resources/czbw.gif");
     }
 
     if(slow)
@@ -71,19 +83,19 @@ void Conezombie::advance(int phase)
             snowfree();
             return;
         }
-        speed=0.5;
-        movie->setSpeed(60);
-    }
-
-    if(state==BURN)
-    {
-        speed=0;
-        if(movie->currentFrameNumber()==movie->frameCount()-1)
+        if(slow==1)
         {
-            delete this;
-            return;
+            movie->setSpeed(50);
+            speed=0.35;
+        }
+        else if(slow==2)
+        {
+            movie->setSpeed(0);
+            speed=0;
         }
     }
+
+
     if(x()<100) {
         delete this;
         return;
@@ -101,7 +113,7 @@ void Conezombie::snowfree()
 
 void Conezombie::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(930,60);
+    QPointF pos(918,60);
     QGraphicsItem* item=scene()->itemAt(pos,QTransform());
     Button* button=qgraphicsitem_cast<Button*>(item);
     if(button)
@@ -111,9 +123,9 @@ void Conezombie::mousePressEvent(QGraphicsSceneMouseEvent *event)
             setCursor(Qt::PointingHandCursor);
             button->power_activate=false;
             button->counter=0;
+            button->state=0;
             snowfree();
-            speed=2.0;
-            movie->setSpeed(250);
+            super=true;
             qDebug()<<"powerconezombie";
         }
     }
