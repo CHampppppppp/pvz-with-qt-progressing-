@@ -5,10 +5,10 @@ Sunflower::Sunflower()
 {
     hp=100;
     state=1;
-    time=100;
+    time=500;
     counter=0;
     atk=0;
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\sf.gif");
+    setMovie(":/resources/sf.gif");
 }
 
 void Sunflower::advance(int phase)
@@ -36,7 +36,9 @@ void Sunflower::advance(int phase)
     else if(!state&&++counter>=time)
     {
         if(counter<10)
-        {Sun* sun=new Sun(50);
+        {
+            Sun* sun=new Sun(50);
+            qDebug()<<"counter:"<<counter;
             if(rand()%2==1)
                 sun->setX(x()+rand()%40);
             else sun->setX(x()-rand()%40);
@@ -49,34 +51,34 @@ void Sunflower::advance(int phase)
         else {
             state=1;
             counter=0;
-            time=100;
+            time=500;
         }
     }
 }
 
 void Sunflower::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
-    {
-        if(event->button()==Qt::LeftButton)
-        {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-                time=1;
-                counter=0;
-                button->counter=0;
-                state=0;
-            }
-        }
 
+    if(event->button()==Qt::LeftButton)
+    {
+        if(Button::shovel_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
+        }
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            time=1;
+            counter=0;
+            button->counter=0;
+            button->state=0;
+            state=0;
+        }
     }
 }
