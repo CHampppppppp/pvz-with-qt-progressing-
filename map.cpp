@@ -44,6 +44,7 @@ void Map::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF pos=mapToScene(event->pos());
         int x=((int(pos.x()) - 249) / (GAP_X-30) *(GAP_X-30) + PLANT_START);
         int y=((int(pos.y()) - 81) / GAP_Y * GAP_Y + ROW1);
+        if(scene()->itemAt(QPoint(x,y),transform())->type()==Plants::Type) return;
         Plants* plant=nullptr;
         switch(id)
         {
@@ -76,9 +77,10 @@ void Map::mousePressEvent(QGraphicsSceneMouseEvent *event)
         plant->setZValue(2);
         scene()->addItem(plant);
     }
-    else if(shop->sun_val<cost)
+    else if(shop->sun_val<cost||event->button()==Qt::RightButton)
     {
         state=0;
+        Card::card_activate=false;
     }
 }
 
