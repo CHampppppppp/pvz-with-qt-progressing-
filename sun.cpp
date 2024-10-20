@@ -6,16 +6,16 @@ Sun::Sun(int val_)//植物生成的阳光
 {
     val=val_;
     to_x=to_y=0;
-    movie= new QMovie("C:\\Users\\champ\\Documents\\pvzfresh\\sun.gif");
+    movie= new QMovie(":/resources/sun.gif");
     movie->start();
     speed=1;
     counter=0;
-    disapper_time=400;
+    disapper_time=200;
     collect_time=200;
     state=1;
     Auto=false;
     sound=new QSoundEffect;
-    sound->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\deng.wav"));
+    sound->setSource(QUrl::fromLocalFile(":/resources/deng.wav"));
     sound->setVolume(0.3f);
 }
 
@@ -25,17 +25,17 @@ Sun::Sun(qreal x,qreal y)//自然掉落的阳光
     to_x=x;
     to_y=y;
     val=50;
-    movie= new QMovie("C:\\Users\\champ\\Documents\\pvzfresh\\sun.gif");
+    movie= new QMovie(":/resources/sun.gif");
     movie->start();
     speed=1;
     counter=0;
-    disapper_time=400;
+    disapper_time=200;
     collect_time=200;
     this->setX(to_x);
     this->setY(90);
     Auto=false;
     sound=new QSoundEffect;
-    sound->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\deng.wav"));
+    sound->setSource(QUrl::fromLocalFile(":/resources/deng.wav"));
     sound->setLoopCount(1);
     sound->setVolume(0.3f);
 }
@@ -78,7 +78,7 @@ void Sun::advance(int phase)
                 speed=(dx/dy)*10;
                 setX(x()-(dx/dy)*10);
                 setY(y()-10);
-                qDebug()<<"sun1";
+                //qDebug()<<"sun1";
                 state=3;
             }
             else
@@ -86,7 +86,7 @@ void Sun::advance(int phase)
                 speed=(dx/dy)*50;
                 setX(x()-(dx/dy)*50);
                 setY(y()-1*50);
-                qDebug()<<"sun2";
+                //qDebug()<<"sun2";
             }
             return;
         }
