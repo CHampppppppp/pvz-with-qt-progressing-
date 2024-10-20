@@ -8,8 +8,8 @@ peashooter::peashooter()
     state=1;
     time=100;
     counter=0;
-    atk=15;
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\ps.gif");
+    atk=20;
+    setMovie(":/resources/ps.gif");
     movie->setSpeed(50);
 }
 
@@ -47,25 +47,27 @@ bool peashooter::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionM
 
 void peashooter::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            time=1;
+            counter=0;
+            button->counter=0;
+            button->state=0;
+            state=0;
+        }
     }
 }
 
