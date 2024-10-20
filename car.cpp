@@ -9,11 +9,11 @@ Car::Car()
     speed=20.0;
     state=1;
     sound1=new QSoundEffect;
-    sound1->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\qifei1.wav"));
+    sound1->setSource(QUrl::fromLocalFile(":/resources/qifei1.wav"));
     sound1->setVolume(0.1f);
     sound1->setLoopCount(1);
     sound2=new QSoundEffect;
-    sound2->setSource(QUrl::fromLocalFile("C:\\Users\\champ\\Documents\\pvzfresh\\car_hit.wav"));
+    sound2->setSource(QUrl::fromLocalFile(":/resources/car_hit.wav"));
     sound2->setVolume(0.1f);
     sound2->setLoopCount(1);
     sound_played=false;
@@ -72,7 +72,7 @@ void Car::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidget
 {
     Q_UNUSED(option)
     Q_UNUSED(widget)
-    painter->drawPixmap(QRect(-30, -30, 60, 60),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\car.png"));
+    painter->drawPixmap(QRect(-30, -30, 60, 60),QPixmap(":/resources/car.png"));
 }
 
 bool Car::collidesWithItem(const QGraphicsItem* other, Qt::ItemSelectionMode mode) const
