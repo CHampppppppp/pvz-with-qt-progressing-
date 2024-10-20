@@ -11,6 +11,7 @@ Zombie::Zombie()
     speed = 0.0;
     time=0;
     counter=0;
+    super=false;
 }
 
 Zombie::~Zombie()
@@ -61,7 +62,7 @@ void Zombie::paint(QPainter* painter,const QStyleOptionGraphicsItem* option, QWi
         painter->drawImage(QRectF(-70,-100,140,140),head_image);
     }
     painter->drawImage(QRectF(-70,-100,140,140),image);
-    painter->drawRect(boundingRect());
+    //painter->drawRect(boundingRect());
 
 }
 
@@ -91,6 +92,11 @@ void Zombie::SetMovie(const QString &path)
     if (!movie->isValid()) {
         qDebug() << "Movie loading failed: Invalid file" << path;
     } else {
+        if(super)
+        {
+            movie->setSpeed(300);
+            speed=3.0;
+        }
         movie->start();
     }
 }
@@ -103,6 +109,8 @@ void Zombie::Sethead(const QString &path)
     if (!head->isValid()) {
         qDebug() << "Movie loading failed: Invalid file" << path;
     } else {
+        if(super)
+            head->setSpeed(300);
         head->start(); // 开始播放动画
     }
 }
