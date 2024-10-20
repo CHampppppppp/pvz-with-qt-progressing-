@@ -6,7 +6,7 @@ bool Button::shovel_activate=false;
 Button::Button(int t)
 {
     counter=0;
-    cool_time=400;
+    cool_time=200;
     state=0;
     type=t;
 
@@ -38,7 +38,7 @@ void Button::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWid
     //painter->drawRect(boundingRect());
     if(type==FREEZE)
     {
-        painter->drawPixmap(QRect(-80, -20, 160, 40), QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\button.png"));
+        painter->drawPixmap(QRect(-80, -20, 160, 40), QPixmap(":/resources/button.png"));
         painter->drawText(boundingRect(), Qt::AlignCenter, "FREEZE");
         painter->setPen(Qt::transparent);
         if(counter<cool_time)
@@ -50,20 +50,20 @@ void Button::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWid
     }
     else if(type==POWER)
     {
-        painter->drawPixmap(QRect(-80, -20, 160, 40), QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\button.png"));
+        painter->drawPixmap(QRect(-80, -20, 160, 40), QPixmap(":/resources/button.png"));
         painter->drawText(boundingRect(), Qt::AlignCenter, "POWER");
         painter->setPen(Qt::transparent);
         if(counter<cool_time)
         {
             QBrush brush(QColor(0, 0, 0, 200));
             painter->setBrush(brush);
-            painter->drawRect(QRectF(-78, -19, 156, 38 * (1 - qreal(counter) / cool_time)));
+            painter->drawRect(QRectF(-78, -19, 156, 36 * (1 - qreal(counter) / cool_time)));
         }
     }
     else if(type==SHOVEL)
     {
-        painter->drawPixmap(QRect(-40, -40, 80, 80), QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\ShovelBank.png"));
-        painter->drawPixmap(QRect(-35, -35, 70, 70), QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\Shovel.png"));
+        painter->drawPixmap(QRect(-40, -40, 80, 80), QPixmap(":/resources/shovelbank.png"));
+        painter->drawPixmap(QRect(-35, -35, 70, 70), QPixmap(":/resources/Shovel.png"));
         painter->setPen(Qt::transparent);
         if(counter<cool_time)
         {
@@ -89,7 +89,7 @@ void Button::mousePressEvent(QGraphicsSceneMouseEvent* event)
             }
             if(!shovel_activate&&!power_activate&&event->button()==Qt::LeftButton)
             {
-                counter=0;
+                counter=-300;
                 state=0;
                 QList<QGraphicsItem*> items=scene()->items();
                 if(!items.isEmpty())
