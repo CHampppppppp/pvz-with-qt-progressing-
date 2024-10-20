@@ -6,8 +6,8 @@ const QMap<int,QPoint> Card::pos={{0,QPoint(350,45)},{1,QPoint(411,45)},{2,QPoin
 {5,QPoint(655,45)},{6,QPoint(716,45)}};
 const QMap<int,QString> Card::mapping = {{0,"sunflower"}, { 1,"peashooter"}, {2,"snowpeashooter"}, {3,"potatomine"},
 {4,"wallnut"}, {5,"repeater"}, {6,"cherrybomb"}};
-const QMap<QString, int> Card::cool = {{"sunflower",100}, {"peashooter",100}, {"cherrybomb",250}, {"wallnut", 100},
-{"snowpeashooter", 200}, {"potatomine", 150}, {"repeater", 200}};
+const QMap<QString, int> Card::cool = {{"sunflower",150}, {"peashooter",250}, {"cherrybomb",400}, {"wallnut", 300},
+{"snowpeashooter", 400}, {"potatomine", 450}, {"repeater", 400}};
 const QMap<QString,int> Card::cost={{"sunflower",50}, {"peashooter",100}, {"cherrybomb",250}, {"wallnut", 50},
 {"snowpeashooter", 200}, {"potatomine", 75}, {"repeater", 200}};
 
@@ -42,8 +42,8 @@ void Card::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
     Q_UNUSED(widget)
     painter->scale(0.6, 0.58);
     //painter->setPen(Qt::green);
-    painter->drawPixmap(QRect(-50, -70, 100, 140),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\card.png"));
-    painter->drawPixmap(QRect(-35, -42, 70, 70),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\"+name+".png"));
+    painter->drawPixmap(QRect(-50, -70, 100, 140),QPixmap(":/resources/card.png"));
+    painter->drawPixmap(QRect(-35, -42, 70, 70),QPixmap(":/resources/"+name+".png"));
     //painter->drawRect(boundingRect());
     QFont font;
     font.setPointSizeF(18);
@@ -59,7 +59,7 @@ void Card::paint(QPainter* painter,const QStyleOptionGraphicsItem* option,QWidge
 
 QRectF Card::boundingRect() const
 {
-    return QRectF(-20, -70, 40, 140);
+    return QRectF(-20, -70, 40, 120);
 }
 
 void Card::mousePressEvent(QGraphicsSceneMouseEvent *event)
