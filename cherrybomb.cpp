@@ -7,7 +7,7 @@ Cherrybomb::Cherrybomb()
     hp=50;
     atk=400;
     state=1;//准备爆炸
-    setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\cb.gif");
+    setMovie(":/resources/cb.gif");
     movie->setSpeed(50);
     counter=0;
     time=50;//爆炸前摇
@@ -25,23 +25,24 @@ void Cherrybomb::advance(int phase)
     else if(state==1&&movie->currentFrameNumber()==movie->frameCount()-1)
     {
         state=2;
-        setMovie("C:\\Users\\champ\\Documents\\pvzfresh\\boom.gif");
+        setMovie(":/resources/boom.gif");
         QList<QGraphicsItem*> items=collidingItems();
         if(!items.isEmpty())
         {
+            int count=0;
             foreach(QGraphicsItem* item,items)
             {
                 Zombie* zombie=qgraphicsitem_cast<Zombie*>(item);
-                if(zombie)
-                {
-                    //qDebug()<<"zombie_x:"<<zombie->x();
-                    //qDebug()<<"cherrybomb_x:"<<x();
-                    zombie->SetMovie("C:\\Users\\champ\\Documents\\pvzfresh\\burn.gif");
-                    zombie->state=BURN;
-                }
+                zombie->state=BURN;
+                zombie->hp=0;
+                count++;
+                qDebug()<<"zombie"<<count<<" state:"<<zombie->state;
             }
         }
-    }else if(state==2&&movie->currentFrameNumber()==movie->frameCount()-1) delete this;
+    }else if(state==2&&movie->currentFrameNumber()==movie->frameCount()-1) {
+        qDebug()<<"bomb_deleted";
+        delete this;
+    }
 }
 
 bool Cherrybomb::collidesWithItem(const QGraphicsItem* other, Qt::ItemSelectionMode mode) const
@@ -53,24 +54,31 @@ bool Cherrybomb::collidesWithItem(const QGraphicsItem* other, Qt::ItemSelectionM
 
 void Cherrybomb::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pos(810,40);
-    QGraphicsItem* item=scene()->itemAt(pos,QTransform());
-    Button* button=qgraphicsitem_cast<Button*>(item);
-    if(button)
+    if(event->button()==Qt::LeftButton)
     {
-        if(event->button()==Qt::LeftButton)
+        if(Button::shovel_activate)
         {
-            if(button->shovel_activate)
-            {
-                button->shovel_activate=false;
-                button->counter=0;
-                delete this;
-            }
-            else if(button->power_activate)
-            {
-
-            }
+            QGraphicsItem* item=scene()->itemAt(QPoint(798,40),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            button->shovel_activate=false;
+            button->counter=0;
+            button->state=0;
+            delete this;
         }
-
+        else if(Button::power_activate)
+        {
+            QGraphicsItem* item=scene()->itemAt(QPoint(918,60),transform());
+            Button* button=qgraphicsitem_cast<Button*>(item);
+            time=1;
+            counter=0;
+            button->counter=0;
+            button->state=0;
+            state=0;
+        }
     }
+}
+
+QRectF Cherrybomb::boundingRect() const
+{
+    return state==2 ? QRectF(-100, -100, 200, 200) : Plants::boundingRect();
 }
