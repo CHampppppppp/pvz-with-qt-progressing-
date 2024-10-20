@@ -1,7 +1,7 @@
 #include "pea.h"
 #include "zombie.h"
 
-Pea::Pea(int atk_num,bool snowor)
+Pea::Pea(int atk_num,int snowor)
 {
     atk=atk_num;
     speed=7.0;
@@ -30,14 +30,10 @@ void Pea::advance(int phase)
         if(zombie)
         {
             zombie->hp-=atk;
-            if(snow) zombie->counter=0;
-            if(!zombie->slow)
-            {
-                zombie->slow=snow;
-                zombie->speed-=snow*0.4;
-                if(zombie->slow)
-                    zombie->movie->setSpeed(60);
-            }
+            if(snow==1)
+                zombie->counter=0;
+            else if(snow==2) zombie->counter=-100;
+            zombie->slow=snow;
             delete this;
             return;
         }
@@ -64,8 +60,8 @@ void Pea::paint(QPainter*painter,const QStyleOptionGraphicsItem* option,QWidget*
     Q_UNUSED(option)
     Q_UNUSED(widget)
     if(!snow)
-    painter->drawPixmap(QRect(-12, -28, 24, 24),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\pea.png"));
+    painter->drawPixmap(QRect(-12, -28, 24, 24),QPixmap(":/resources/pea.png"));
     else
-        painter->drawPixmap(boundingRect(),QPixmap("C:\\Users\\champ\\Documents\\pvzfresh\\peasnow.png"),QRectF());
+        painter->drawPixmap(boundingRect(),QPixmap(":/resources/peasnow.png"),QRectF());
 }
 
